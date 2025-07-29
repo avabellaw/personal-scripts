@@ -1,6 +1,14 @@
 # Personal script files
 
+## Script descriptions
+
+### bin
+
+- get-last-backup - Searches $BACKUP_DIR and returns the lastest backup's date [DD/MM HH:MM].
+
 ## Set up backup scripts
+
+### BACKUP_DIR enviroment variable
 
 Set an enviorment variable in /etc/environment called "BACKUP_DIR" to target backup dir.
 
@@ -8,10 +16,6 @@ Set an enviorment variable in /etc/environment called "BACKUP_DIR" to target bac
 
 _Always use -H when editings files as root to avoid junk going into the Home folder ~/.config_'
 
-## Add ~/Scripts/bin to PATH
+### Add ~/Scripts/bin to PATH
 
-```sudo nano ~/.bashrc```
-
-Add the following to the end of the file:
-
-```PATH=$PATH:~/Scripts/bin```
+Also in /etc/environment, add ~/Scripts/bin to the end of PATH var
