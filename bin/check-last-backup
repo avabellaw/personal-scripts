@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Checks to see whether there's been a backup in the last x minutes for executor gnome extension.
+
+if [[ $1 != '' ]]
+then 
+    TIMEFRAME_MINS=$1 # Use passed value for mmin - Check backup within x mins.
+else 
+    TIMEFRAME_MINS=66 # Default check for backup in last 66 mins - accounts for hourly backup delay.
+fi
+
+if [ -n "$(find $BACKUP_DIR -maxdepth 1 -mmin -$TIMEFRAME_MINS)" ]; then echo "Last backup:" $(get-last-backup); else echo "No backup since: " $(get-last-backup)"<executor.css.red>"; fi
