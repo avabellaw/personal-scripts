@@ -8,6 +8,11 @@
 
 ## Set up backup scripts
 
+Backups are sent to an external drive using btrbk. It's an incremental backup using btrfs send/receive through btrbk.
+Snaphots are created on the drive that contains the subvolumes. They are then sent to the external drive incrementally.
+
+This means that snapshots are stored on both the drive being backed up and the backup drive.
+
 ### BACKUP_DIR enviroment variable
 
 Set an enviorment variable in /etc/environment called "BACKUP_DIR" to target backup dir.
