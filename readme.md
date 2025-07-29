@@ -4,7 +4,8 @@
 
 ### bin
 
-- get-last-backup - Searches $BACKUP_DIR and returns the lastest backup's date [DD/MM HH:MM].
+- get-last-backup - Searches **$BACKUP_DIR** and returns the lastest backup's date [DD/MM HH:MM].
+- check-last-backup - **get-last-backup dependancy** For executor Gnome extension: Displays last backup, in red if been over 60 minutes.
 
 ## Set up backup scripts
 
