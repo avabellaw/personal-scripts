@@ -23,4 +23,12 @@ _Always use -H when editings files as root to avoid junk going into the Home fol
 
 ### Add ~/Scripts/bin to PATH
 
-Also in /etc/environment, add ~/Scripts/bin to the end of PATH var
+In /etc/environment, add /home/[user]/Scripts/bin to the end of PATH var - **Works for user and GUI apps such as executor**.
+
+Use sudo visudo to add /home/[user]/Scripts/bin to secure path - **Works for sudo/root** 
+
+| Directory | Scope |
+| --------- | ----- |
+| /etc/environment | System-wide: all users and programs |
+| ~/.bashrc | Per-user, interactice bash shell only |
+| visudo | secure path: sudo/root |
