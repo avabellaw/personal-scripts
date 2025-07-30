@@ -1,0 +1,15 @@
+#!/bin/bash
+
+PACKAGE=$1
+
+if [[ $# -le 0 ]]; then 
+    echo "No arguments given"
+    exit 1
+fi
+
+if [[ "$@*" == *"-y"* ]]
+then 
+PACKAGE="$PACKAGE -y"
+fi
+
+echo "PACKAGE: " $PACKAGE
