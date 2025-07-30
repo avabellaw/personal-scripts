@@ -7,9 +7,14 @@ if [[ $# -le 0 ]]; then
     exit 1
 fi
 
-if [[ "$@*" == *"-y"* ]]
-then 
-PACKAGE="$PACKAGE -y"
+if [[ "$@*" == *"-y"* ]]; then 
+    AUTO_Y="-y"
 fi
 
-echo "PACKAGE: " $PACKAGE
+echo $AUTO_Y
+
+if sudo apt install $PACKAGE $AUTO_Y; then 
+    echo "$PACKAGE" >> ~/.saved-packages
+else
+    echo "$PACKAGE not saved."
+fi

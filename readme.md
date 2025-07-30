@@ -3,6 +3,7 @@
 ## Script descriptions
 
 - run-btrbk.sh - Runs btrbk and creates own simplified log. Notifys if backup failed.
+- installpersist [PACKAGE] [-y] - Runs apt install and saves package in ~./saved-packages
 
 ### bin
 
