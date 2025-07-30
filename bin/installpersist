@@ -11,10 +11,14 @@ if [[ "$@*" == *"-y"* ]]; then
     AUTO_Y="-y"
 fi
 
-echo $AUTO_Y
+sudo apt install $PACKAGE $AUTO_Y 
 
-if sudo apt install $PACKAGE $AUTO_Y; then 
-    echo "$PACKAGE" >> ~/.saved-packages
+if [[ $? -eq 0 ]]; then 
+    if grep -c $PACKAGE ~/.saved-packages -eq 0; then
+        echo "$PACKAGE" >> ~/.saved-packages
+    else
+        echo "Already saved."
+    fi
 else
     echo "$PACKAGE not saved."
 fi
