@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# ORIGINAL CREDIT: Alice [stackoverflow] - https://askubuntu.com/questions/1064379/using-rsync-for-incremental-backup
+
+if [ "$#" -lt 2 ]; then
+    if [ "$#" -eq 1 ]; then
+        echo "Missing backup dest dir"
+    else
+        echo "Missing backup source and destination dir"
+    fi
+
+    exit 1
+fi
+ 
+BACKUP_DIR=$1
+DEST=$2
+if [ -n "$(rsync -ai --delete  --exclude ".[!.]*"  $BACKUP_DIR/ $DEST/latest)" ]; then
+    DATE=`date +"%m-%d-%y"`
+    TIME=`date +"%T"`
+    mkdir -p $DEST/"$DATE T$TIME"
+    cp -al $DEST/latest/* $DEST/"$DATE T$TIME"
+    echo "done:$DATE T$TIME"
+fi
