@@ -14,10 +14,10 @@ fi
  
 BACKUP_DIR=$1
 DEST=$2
-if [ -n "$(rsync -ai --delete  --exclude ".[!.]*"  $BACKUP_DIR/ $DEST/latest)" ]; then
+if [ -n "$(sudo rsync -ai --delete  --exclude ".[!.]*"  $BACKUP_DIR/ $DEST/latest)" ]; then
     DATE=`date +"%m-%d-%y"`
     TIME=`date +"%T"`
-    mkdir -p $DEST/"$DATE T$TIME"
-    cp -al $DEST/latest/* $DEST/"$DATE T$TIME"
+    sudo mkdir -p $DEST/"$DATE T$TIME"
+    sudo cp -al $DEST/latest/* $DEST/"$DATE T$TIME"
     echo "done:$DATE T$TIME"
 fi
