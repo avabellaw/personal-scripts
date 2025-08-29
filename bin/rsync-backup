@@ -19,5 +19,5 @@ if [ -n "$(sudo rsync -ai --delete  --exclude ".[!.]*"  $BACKUP_DIR/ $DEST/lates
     TIME=`date +"%T"`
     sudo mkdir -p $DEST/"$DATE T$TIME"
     sudo cp -al $DEST/latest/* $DEST/"$DATE T$TIME"
-    echo "done:$DATE T$TIME"
+    echo "${DATE}T$TIME"
 fi
