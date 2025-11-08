@@ -1,6 +1,25 @@
 #!/bin/bash
 
-clean=$(ls -1 -t $BACKUP_DIR | head -1)
-echo ${clean:12:2}/${clean:10:2} ${clean:15:2}:${clean:17:2}
+for arg in "$@"; do
+    case $arg in
+        folder=*)
+            folder="${arg#*=}";
+        ;;
+    esac
+done
+
+if [[ -z $folder ]]; then
+    echo "Set the folder var - folder=[snapshot folder]"
+fi
+
+clean=$(ls -1 -t $BACKUP_DIR/$folder | head -1)
+
+clean=${clean#*.}
+
+DAY=${clean:6:2}
+MONTH=${clean:4:2}
+HOUR=${clean:9:2}
+MIN=${clean:11:2}
+echo $DAY/$MONTH $HOUR:$MIN
 
 
