@@ -1,18 +1,6 @@
 #!/bin/bash
 
-for arg in "$@"; do
-    case $arg in
-        folder=*)
-            folder="${arg#*=}";
-        ;;
-    esac
-done
-
-if [[ -z $folder ]]; then
-    echo "Set the folder var - folder=[snapshot folder]"
-fi
-
-clean=$(ls -1 -t $BACKUP_DIR/$folder | head -1)
+clean=$(find $BACKUP_DIR -maxdepth 2 -mmin -66 | grep @ | head -1)
 
 clean=${clean#*.}
 
