@@ -23,4 +23,8 @@ then
     TIMEFRAME_MINS=66 # Default check for backup in last 66 mins - accounts for hourly backup delay.
 fi
 
-if [ -n "$(find $BACKUP_DIR -maxdepth 2 -mmin -$TIMEFRAME_MINS)" ]; then echo "Last backup:" $(get-last-backup); else echo "No backup since: " $(get-last-backup folder=$folder)"<executor.css.red>"; fi
+if [ -n "$(find $BACKUP_DIR -maxdepth 2 -mmin -$TIMEFRAME_MINS)" ]; then
+    echo "Last backup:" $(get-last-backup);
+else
+    echo "Backup overdue, next scheduled: " $(systemctl list-timers btrbk.timer | awk '{ print $5 }' | grep -o "[0-9][a-z]*")"<executor.css.red>"; 
+fi
