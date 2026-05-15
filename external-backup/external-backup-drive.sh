@@ -5,18 +5,26 @@
 NOTIFICATION_TITLE="External drive btrbk"
 NOTIFY_USER=ava
 
-/usr/bin/sudo -u $NOTIFY_USER DISPLAY=:0 \
-DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u $NOTIFY_USER)/bus \
-/usr/bin/notify-send "$NOTIFICATION_TITLE" "Backup started"
+LAST_BACKUP_EPOCH_SECONDS=$(date -d "$(sudo systemctl show --property=ActiveEnterTimestamp trigger-external-backup.service | cut -d= -f2)" +%s)
+SECONDS_SINCE_BACKUP=$(($(date +%s) - LAST_BACKUP_EPOCH_SECONDS))
+if [[ $SECONDS_SINCE_BACKUP > 3600 ]]; then
+    /usr/bin/sudo -u $NOTIFY_USER DISPLAY=:0 \
+    DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u $NOTIFY_USER)/bus \
+    /usr/bin/notify-send "$NOTIFICATION_TITLE" "Backup started";
 
-btrbk archive /mnt/btrfsroot/.btrbk-snapshots /media/external-backup
+    btrbk archive /mnt/btrfsroot/.btrbk-snapshots /media/external-backup;
 
-if [[ $? -eq 0 ]]; then
-	/usr/bin/sudo -u $NOTIFY_USER DISPLAY=:0 \
-DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u $NOTIFY_USER)/bus \
-/usr/bin/notify-send "$NOTIFICATION_TITLE" "Backup successful";
-else
-	/usr/bin/sudo -u $NOTIFY_USER DISPLAY=:0 \
-DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u $NOTIFY_USER)/bus \
-/usr/bin/notify-send "$NOTIFICATION_TITLE" "Backup error";
+    if [[ $? -eq 0 ]]; then
+        /usr/bin/sudo -u $NOTIFY_USER DISPLAY=:0 \
+        DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u $NOTIFY_USER)/bus \
+        /usr/bin/notify-send "$NOTIFICATION_TITLE" "Backup successful";
+    else
+        /usr/bin/sudo -u $NOTIFY_USER DISPLAY=:0 \
+        DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u $NOTIFY_USER)/bus \
+        /usr/bin/notify-send "$NOTIFICATION_TITLE" "Backup error";
+    fi
+else 
+    /usr/bin/sudo -u $NOTIFY_USER DISPLAY=:0 \
+    DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u $NOTIFY_USER)/bus \
+    /usr/bin/notify-send "$NOTIFICATION_TITLE" "No backup needed";
 fi
