@@ -30,7 +30,8 @@ then
 fi
 
 # Run btrbk
-sudo btrbk run
+# Display to console and also logfile.
+sudo btrbk run 2>&1 | tee -a /var/log/btrbk-summary.log 
 
 TIME_END=$(date "+%s")
 TIME_TAKEN=$((TIME_END-TIME_START))
