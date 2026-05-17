@@ -5,26 +5,28 @@
 NOTIFICATION_TITLE="External drive btrbk"
 NOTIFY_USER=ava
 
-LAST_BACKUP_EPOCH_SECONDS=$(date -d "$(sudo systemctl show --property=ActiveEnterTimestamp trigger-external-backup.service | cut -d= -f2)" +%s)
+LAST_BACKUP_EPOCH_SECONDS=$(date -d "$(journalctl -u trigger-external-backup.service | grep "Backup successful" | tail -n 1 | cut -d " " -f8-)" +%s)
 SECONDS_SINCE_BACKUP=$(($(date +%s) - LAST_BACKUP_EPOCH_SECONDS))
-if [[ $SECONDS_SINCE_BACKUP > 3600 ]]; then
+
+log() {
+    # Create notification for user (this service has to be run as root).
+    # Log to systemd service log. 
     /usr/bin/sudo -u $NOTIFY_USER DISPLAY=:0 \
     DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u $NOTIFY_USER)/bus \
-    /usr/bin/notify-send "$NOTIFICATION_TITLE" "Backup started";
+    /usr/bin/notify-send "$NOTIFICATION_TITLE" "$1";
+    echo "$1";
+}
+
+if [[ $SECONDS_SINCE_BACKUP -gt 3600 ]]; then
+    log "Backup started"
 
     btrbk archive /mnt/btrfsroot/.btrbk-snapshots /media/external-backup;
 
     if [[ $? -eq 0 ]]; then
-        /usr/bin/sudo -u $NOTIFY_USER DISPLAY=:0 \
-        DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u $NOTIFY_USER)/bus \
-        /usr/bin/notify-send "$NOTIFICATION_TITLE" "Backup successful";
+        log "Backup successful: $(date "+%D %T %z")"
     else
-        /usr/bin/sudo -u $NOTIFY_USER DISPLAY=:0 \
-        DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u $NOTIFY_USER)/bus \
-        /usr/bin/notify-send "$NOTIFICATION_TITLE" "Backup error";
+        log "Backup error"
     fi
 else 
-    /usr/bin/sudo -u $NOTIFY_USER DISPLAY=:0 \
-    DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u $NOTIFY_USER)/bus \
-    /usr/bin/notify-send "$NOTIFICATION_TITLE" "No backup needed";
+    log "No backup needed"
 fi
